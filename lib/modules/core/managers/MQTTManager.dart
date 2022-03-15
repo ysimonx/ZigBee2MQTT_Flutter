@@ -54,7 +54,7 @@ class MQTTManager extends ChangeNotifier {
     try {
       print('EXAMPLE::Mosquitto start client connecting....');
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
-      // updateState();
+      updateState();
       await _client!.connect();
     } on Exception catch (e) {
       print('EXAMPLE::client exception - $e');
@@ -107,6 +107,7 @@ class MQTTManager extends ChangeNotifier {
     updateState();
 
     print('EXAMPLE::Mosquitto client connected....');
+
     _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
       final String pt =

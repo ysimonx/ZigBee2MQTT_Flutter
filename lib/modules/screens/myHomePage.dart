@@ -6,7 +6,8 @@ import 'package:zigbee2mqtt_flutter/modules/core/models/MQTTAppState.dart';
 import '../core/managers/MQTTManager.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title, required this.mqttHost})
+      : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -18,6 +19,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final String mqttHost;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -42,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   initState() {
     super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) => onAfterBuild(context));
   }
 
   @override
@@ -49,12 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
     _manager = Provider.of<MQTTManager>(context);
 
     var x = _manager.currentState.getAppConnectionState;
-    print(x);
-    if (x == MQTTAppConnectionState.disconnected) {
-      _configureAndConnect();
-    }
+
     if (x == MQTTAppConnectionState.connected) {
-      _subscribeTopic();
+      _subscribeTopics();
     }
 
     // This method is rerun every time setState is called, for instance as done
@@ -108,21 +108,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _configureAndConnect() {
-    // TODO: Use UUID
     String osPrefix = 'Flutter_iOS';
     if (Platform.isAndroid) {
       osPrefix = 'Flutter_Android';
     }
-    _manager.initializeMQTTClient(host: "192.168.85.3", identifier: osPrefix);
+    _manager.initializeMQTTClient(host: widget.mqttHost, identifier: osPrefix);
     _manager.connect();
   }
 
-  void _subscribeTopic() {
+  void _subscribeTopics() {
     _manager.subScribeTo("zigbee2mqtt/bridge/devices");
     _manager.subScribeTo("zigbee2mqtt/+");
   }
 
   void _disconnect() {
     _manager.disconnect();
+  }
+
+  onAfterBuild(BuildContext context) {
+    _configureAndConnect();
   }
 }
