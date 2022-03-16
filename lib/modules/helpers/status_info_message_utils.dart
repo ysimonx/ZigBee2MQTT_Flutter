@@ -1,4 +1,4 @@
-import 'package:zigbee2mqtt_flutter/modules/core/models/MQTTAppState.dart';
+import '../core/models/MQTTAppState.dart';
 
 String prepareStateMessageFrom(MQTTAppConnectionState state) {
   switch (state) {

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zigbee2mqtt_flutter/modules/core/models/MQTTAppState.dart';
-import 'package:zigbee2mqtt_flutter/modules/helpers/status_info_message_utils.dart';
+import '../../modules/core/models/MQTTAppState.dart';
+import '../../modules/helpers/status_info_message_utils.dart';
 import '../core/managers/MQTTManager.dart';
 
 class MyHomePage extends StatefulWidget {
