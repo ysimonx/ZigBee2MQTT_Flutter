@@ -138,6 +138,6 @@ class MQTTManager extends ChangeNotifier {
   }
 
   void updateState() {
-    notifyListeners();
+    // notifyListeners();
   }
 }

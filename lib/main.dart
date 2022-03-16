@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'modules/core/managers/MQTTManager.dart';
+import 'modules/core/managers/Zigbee2MQTTManager.dart';
 import 'modules/helpers/service_locator.dart';
 import 'modules/screens/myHomePage.dart';
 
@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<MQTTManager>(
-        create: (context) => service_locator<MQTTManager>(),
+    return ChangeNotifierProvider<Zigbee2MQTTManager>(
+        create: (context) => service_locator<Zigbee2MQTTManager>(),
         child: MaterialApp(
             title: 'ZigBee2MQTT Demo',
             theme: ThemeData(

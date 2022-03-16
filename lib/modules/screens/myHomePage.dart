@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../modules/core/models/MQTTAppState.dart';
 import '../../modules/helpers/status_info_message_utils.dart';
-import '../core/managers/MQTTManager.dart';
+import '../core/managers/Zigbee2MQTTManager.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage(
@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  late MQTTManager _manager;
+  late Zigbee2MQTTManager _manager;
   bool boolIsFirstBuildDone = false;
 
   void _incrementCounter() {
@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _manager = Provider.of<MQTTManager>(context);
+    _manager = Provider.of<Zigbee2MQTTManager>(context);
 
     if (boolIsFirstBuildDone) {
       var x = _manager.currentState.getAppConnectionState;
