@@ -18,8 +18,6 @@ class MQTTManager extends ChangeNotifier {
     required String identifier,
   }) {
     // Save the values
-    // TODO: If already connected throw error
-    // TODO: Remove forced unwrap usage and assertion
     _identifier = identifier;
     _host = host;
     _port = port;
