@@ -6,6 +6,7 @@ import 'modules/helpers/service_locator.dart';
 import 'modules/screens/myHomePage.dart';
 
 const mqttHost = "10.8.0.4";
+const mqttPort = 1883;
 
 void main() {
   setupLocator();
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<MQTTManager>(
         create: (context) => service_locator<MQTTManager>(),
         child: MaterialApp(
-            title: 'Flutter ZigBee2MQTT Demo',
+            title: 'ZigBee2MQTT Demo',
             theme: ThemeData(
               // This is the theme of your application.
               //
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
             routes: {
               '/': (BuildContext context) => const MyHomePage(
                   mqttHost: mqttHost,
-                  title: 'Flutter Demo ZigBee2MQTT 1st Page'),
+                  mqttPort: mqttPort,
+                  title: 'ZigBee2MQTT Demo 1st Page'),
             }));
   }
 }

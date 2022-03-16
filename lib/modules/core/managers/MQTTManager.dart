@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -11,10 +9,12 @@ class MQTTManager extends ChangeNotifier {
   MqttServerClient? _client;
   late String _identifier;
   String? _host;
+  int? _port;
   String _topic = "";
 
   void initializeMQTTClient({
     required String host,
+    required int port,
     required String identifier,
   }) {
     // Save the values
@@ -22,6 +22,7 @@ class MQTTManager extends ChangeNotifier {
     // TODO: Remove forced unwrap usage and assertion
     _identifier = identifier;
     _host = host;
+    _port = port;
     _client = MqttServerClient(_host!, _identifier);
     _client!.port = 1883;
     _client!.keepAlivePeriod = 20;
@@ -111,7 +112,7 @@ class MQTTManager extends ChangeNotifier {
     _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
       final String pt =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message!);
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       _currentState.setReceivedText(pt);
       updateState();
       print(
