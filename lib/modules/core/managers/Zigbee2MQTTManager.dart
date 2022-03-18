@@ -8,6 +8,8 @@ import 'MQTTManager.dart';
 class Zigbee2MQTTManager extends MQTTManager {
   HashMap _hmapDevices = HashMap<String, ZigBeeDevice>();
 
+  HashMap hmapDevices() => _hmapDevices;
+
   @override
   void onConnected() {
     super.onConnected();

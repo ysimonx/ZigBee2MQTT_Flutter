@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    return Scaffold(
+    /* return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -90,6 +91,28 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+    */
+    return Scaffold(
+      appBar: AppBar(title: const Text('Devices List')),
+      body: _manager.hmapDevices().isNotEmpty
+          ? ListView.builder(
+              itemCount: _manager.hmapDevices().length,
+              itemBuilder: (BuildContext context, int index) {
+                HashMap x = _manager.hmapDevices();
+                String key = x.keys.elementAt(index);
+                return ListTile(
+                  title: Text('Device :  ${key}'),
+                );
+              },
+            )
+          : const Center(child: Text('No items')),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
