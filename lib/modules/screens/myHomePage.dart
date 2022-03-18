@@ -1,10 +1,12 @@
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zigbee2mqtt_flutter/modules/core/models/IOTDevice.dart';
 import '../../modules/core/models/MQTTAppState.dart';
-import '../../modules/helpers/status_info_message_utils.dart';
-import '../core/managers/MQTTManager.dart';
+import '../core/managers/Zigbee2MQTTManager.dart';
+import '../helpers/screen_route.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage(
@@ -34,7 +36,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  late MQTTManager _manager;
+  late Zigbee2MQTTManager _manager;
   bool boolIsFirstBuildDone = false;
 
   void _incrementCounter() {
@@ -57,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _manager = Provider.of<MQTTManager>(context);
+    _manager = Provider.of<Zigbee2MQTTManager>(context);
 
     if (boolIsFirstBuildDone) {
       var x = _manager.currentState.getAppConnectionState;
@@ -65,35 +67,37 @@ class _MyHomePageState extends State<MyHomePage> {
       if (x == MQTTAppConnectionState.disconnected) {
         _configureAndConnect();
       }
-
-      if (x == MQTTAppConnectionState.connected) {
-        _subscribeTopics();
-      }
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      appBar: AppBar(title: const Text('Devices List'), actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(right: 15.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(SETTINGS_ROUTE);
+            },
+            child: const Icon(
+              Icons.settings,
+              size: 26.0,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Text(
-              prepareStateMessageFrom(
-                  _manager.currentState.getAppConnectionState),
-              style: Theme.of(context).textTheme.headline4,
+          ),
+        )
+      ]),
+      body: _manager.hmapDevices().isNotEmpty
+          ? ListView.builder(
+              itemCount: _manager.hmapDevices().length,
+              itemBuilder: (BuildContext context, int index) {
+                HashMap x = _manager.hmapDevices();
+                String device_key = x.keys.elementAt(index);
+                ZigBeeDevice device = x.values.elementAt(index);
+                return ListTile(
+                  title: Text('Device :  ${device_key}'),
+                );
+              },
             )
-          ],
-        ),
-      ),
+          : const Center(child: Text('No items')),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
@@ -102,33 +106,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _configureAndConnect() {
-    var x = _manager.currentState.getAppConnectionState;
-
-    if (x == MQTTAppConnectionState.connected) {
-      return;
-    }
-
-    String osPrefix = 'Flutter_iOS';
-    if (Platform.isAndroid) {
-      osPrefix = 'Flutter_Android';
-    }
-    _manager.initializeMQTTClient(
-        host: widget.mqttHost, port: widget.mqttPort, identifier: osPrefix);
-    _manager.connect();
-  }
-
-  void _subscribeTopics() {
-    _manager.subScribeTo("zigbee2mqtt/bridge/devices");
-    _manager.subScribeTo("zigbee2mqtt/+");
-  }
-
-  void _disconnect() {
-    _manager.disconnect();
-  }
-
   onAfterBuild(BuildContext context) {
     boolIsFirstBuildDone = true;
     _configureAndConnect();
+  }
+
+  void _configureAndConnect() {
+    _manager.start(host: widget.mqttHost, port: widget.mqttPort);
   }
 }

@@ -1,8 +1,9 @@
-import 'package:get_it/get_it.dart';
-
-import '../core/managers/MQTTManager.dart';
+import 'package:get_it/get_it.dart' show GetIt;
+import '../core/managers/Zigbee2MQTTManager.dart';
 
 GetIt service_locator = GetIt.instance;
+
 void setupLocator() {
-  service_locator.registerLazySingleton<MQTTManager>(() => MQTTManager());
+  service_locator
+      .registerLazySingleton<Zigbee2MQTTManager>(() => Zigbee2MQTTManager());
 }
