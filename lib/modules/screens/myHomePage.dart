@@ -65,10 +65,6 @@ class _MyHomePageState extends State<MyHomePage> {
       if (x == MQTTAppConnectionState.disconnected) {
         _configureAndConnect();
       }
-
-      if (x == MQTTAppConnectionState.connected) {
-        _subscribeTopics();
-      }
     }
 
     return Scaffold(
@@ -116,11 +112,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _manager.initializeMQTTClient(
         host: widget.mqttHost, port: widget.mqttPort, identifier: osPrefix);
     _manager.connect();
-  }
-
-  void _subscribeTopics() {
-    _manager.subScribeTo("zigbee2mqtt/bridge/devices");
-    _manager.subScribeTo("zigbee2mqtt/+");
   }
 
   void _disconnect() {

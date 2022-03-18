@@ -108,17 +108,30 @@ class MQTTManager extends ChangeNotifier {
     print('EXAMPLE::Mosquitto client connected....');
 
     _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-      final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
-      final String pt =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-      _currentState.setReceivedText(pt);
-      updateState();
-      print(
-          'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
-      print('');
+      for (var i = 0; i < c.length; i++) {
+        onReceivedMessage(c[i]);
+      }
     });
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
+  }
+
+  void onReceivedMessage(MqttReceivedMessage<MqttMessage> m) {
+    final MqttPublishMessage recMess = m.payload as MqttPublishMessage;
+    final String pt =
+        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+    _currentState.setReceivedText(pt);
+
+    var topic = m.topic;
+    var payload = pt;
+    onReceivedTopicMessage(topic, payload);
+  }
+
+  void onReceivedTopicMessage(String topic, String payload) {
+    print(
+        'EXAMPLE::Change notification:: topic is <${topic}>, payload is <-- ${payload} -->');
+    print('');
+    // updateState();
   }
 
   void subScribeTo(String topic) {

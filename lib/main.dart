@@ -5,7 +5,7 @@ import 'modules/core/managers/Zigbee2MQTTManager.dart';
 import 'modules/helpers/service_locator.dart';
 import 'modules/screens/myHomePage.dart';
 
-const mqttHost = "10.8.0.4";
+const mqttHost = "192.168.85.3";
 const mqttPort = 1883;
 
 void main() {
