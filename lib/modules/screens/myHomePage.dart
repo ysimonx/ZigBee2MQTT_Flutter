@@ -3,9 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zigbee2mqtt_flutter/modules/core/models/IOTDevice.dart';
 import '../../modules/core/models/MQTTAppState.dart';
-import '../../modules/helpers/status_info_message_utils.dart';
 import '../core/managers/Zigbee2MQTTManager.dart';
+import '../helpers/screen_route.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage(
@@ -68,46 +69,30 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    /* return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Text(
-              prepareStateMessageFrom(
-                  _manager.currentState.getAppConnectionState),
-              style: Theme.of(context).textTheme.headline4,
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-    */
     return Scaffold(
-      appBar: AppBar(title: const Text('Devices List')),
+      appBar: AppBar(title: const Text('Devices List'), actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(right: 15.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(SETTINGS_ROUTE);
+            },
+            child: const Icon(
+              Icons.settings,
+              size: 26.0,
+            ),
+          ),
+        )
+      ]),
       body: _manager.hmapDevices().isNotEmpty
           ? ListView.builder(
               itemCount: _manager.hmapDevices().length,
               itemBuilder: (BuildContext context, int index) {
                 HashMap x = _manager.hmapDevices();
-                String key = x.keys.elementAt(index);
+                String device_key = x.keys.elementAt(index);
+                ZigBeeDevice device = x.values.elementAt(index);
                 return ListTile(
-                  title: Text('Device :  ${key}'),
+                  title: Text('Device :  ${device_key}'),
                 );
               },
             )
@@ -121,28 +106,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _configureAndConnect() {
-    var x = _manager.currentState.getAppConnectionState;
-
-    if (x == MQTTAppConnectionState.connected) {
-      return;
-    }
-
-    String osPrefix = 'Flutter_iOS';
-    if (Platform.isAndroid) {
-      osPrefix = 'Flutter_Android';
-    }
-    _manager.initializeMQTTClient(
-        host: widget.mqttHost, port: widget.mqttPort, identifier: osPrefix);
-    _manager.connect();
-  }
-
-  void _disconnect() {
-    _manager.disconnect();
-  }
-
   onAfterBuild(BuildContext context) {
     boolIsFirstBuildDone = true;
     _configureAndConnect();
+  }
+
+  void _configureAndConnect() {
+    _manager.start(host: widget.mqttHost, port: widget.mqttPort);
   }
 }

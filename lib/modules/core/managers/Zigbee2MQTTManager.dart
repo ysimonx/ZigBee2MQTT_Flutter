@@ -1,8 +1,10 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:zigbee2mqtt_flutter/modules/core/models/IOTDevice.dart';
 
+import '../models/MQTTAppState.dart';
 import 'MQTTManager.dart';
 
 class Zigbee2MQTTManager extends MQTTManager {
@@ -53,5 +55,20 @@ class Zigbee2MQTTManager extends MQTTManager {
     });
 
     notifyListeners();
+  }
+
+  void start({required String host, required int port}) {
+    var x = currentState.getAppConnectionState;
+
+    if (x == MQTTAppConnectionState.connected) {
+      return;
+    }
+
+    String osPrefix = 'Flutter_iOS';
+    if (Platform.isAndroid) {
+      osPrefix = 'Flutter_Android';
+    }
+    initializeMQTTClient(host: host, port: port, identifier: osPrefix);
+    connect();
   }
 }

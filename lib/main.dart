@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'modules/core/managers/Zigbee2MQTTManager.dart';
+import 'modules/helpers/screen_route.dart';
 import 'modules/helpers/service_locator.dart';
 import 'modules/screens/myHomePage.dart';
+import 'modules/screens/settings_screen.dart';
 
 const mqttHost = "192.168.85.3";
 const mqttPort = 1883;
@@ -30,10 +32,11 @@ class MyApp extends StatelessWidget {
             ),
             initialRoute: '/',
             routes: {
-              '/': (BuildContext context) => const MyHomePage(
+              HOMEPAGE_ROUTE: (BuildContext context) => const MyHomePage(
                   mqttHost: mqttHost,
                   mqttPort: mqttPort,
                   title: 'ZigBee2MQTT Demo 1st Page'),
+              SETTINGS_ROUTE: (BuildContext context) => const SettingsScreen()
             }));
   }
 }
