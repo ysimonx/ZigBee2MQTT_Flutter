@@ -46,6 +46,8 @@ class MQTTManager extends ChangeNotifier {
   }
 
   String? get host => _host;
+  int? get port => _port;
+
   MQTTAppState get currentState => _currentState;
   // Connect to the host
   void connect() async {

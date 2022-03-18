@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
               //
               primarySwatch: Colors.blue,
             ),
-            initialRoute: '/',
+            initialRoute: HOMEPAGE_ROUTE,
             routes: {
               HOMEPAGE_ROUTE: (BuildContext context) => const MyHomePage(
                   mqttHost: mqttHost,
