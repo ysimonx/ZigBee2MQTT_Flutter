@@ -10,6 +10,8 @@ import 'MQTTManager.dart';
 class Zigbee2MQTTManager extends MQTTManager {
   HashMap _hmapDevices = HashMap<String, ZigBeeDevice>();
 
+  final bool _autoReconnect = true;
+
   HashMap hmapDevices() => _hmapDevices;
 
   @override
@@ -55,6 +57,14 @@ class Zigbee2MQTTManager extends MQTTManager {
     });
 
     notifyListeners();
+  }
+
+  @override
+  void onDisconnected() {
+    super.onDisconnected();
+    if (_autoReconnect) {
+      start(host: host!, port: port!); // reconnect
+    }
   }
 
   void start({required String host, required int port}) {

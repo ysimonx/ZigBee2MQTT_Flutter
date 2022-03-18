@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool boolIsFirstBuildDone = false;
 
   void _incrementCounter() {
+    _manager.disconnect();
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -91,9 +92,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 HashMap x = _manager.hmapDevices();
                 String device_key = x.keys.elementAt(index);
                 ZigBeeDevice device = x.values.elementAt(index);
-                return ListTile(
-                  title: Text('Device :  ${device_key}'),
-                );
+
+                return Card(
+                    elevation: 6,
+                    margin: const EdgeInsets.all(10),
+                    child: ListTile(
+                        title: Text('$device_key'),
+                        leading: const Icon(Icons.lightbulb),
+                        trailing: const Text('trailing'),
+                        subtitle: Text('${device.name}'),
+                        isThreeLine: true));
               },
             )
           : const Center(child: Text('No items')),

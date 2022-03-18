@@ -46,6 +46,8 @@ class MQTTManager extends ChangeNotifier {
   }
 
   String? get host => _host;
+  int? get port => _port;
+
   MQTTAppState get currentState => _currentState;
   // Connect to the host
   void connect() async {
@@ -116,6 +118,7 @@ class MQTTManager extends ChangeNotifier {
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }
 
+  /// process incoming message -> topic + payload
   void onReceivedMessage(MqttReceivedMessage<MqttMessage> m) {
     final MqttPublishMessage recMess = m.payload as MqttPublishMessage;
     final String pt =
@@ -127,6 +130,7 @@ class MQTTManager extends ChangeNotifier {
     onReceivedTopicMessage(topic, payload);
   }
 
+  /// process incoming topic + payload (will be override when class is extends)
   void onReceivedTopicMessage(String topic, String payload) {
     print(
         'EXAMPLE::Change notification:: topic is <${topic}>, payload is <-- ${payload} -->');
@@ -134,6 +138,7 @@ class MQTTManager extends ChangeNotifier {
     // updateState();
   }
 
+  // subscribe to a topic
   void subScribeTo(String topic) {
     // Save topic for future use
     _topic = topic;
@@ -145,7 +150,7 @@ class MQTTManager extends ChangeNotifier {
     _client!.unsubscribe(topic);
   }
 
-  /// Unsubscribe from a topic
+  /// Unsubscribe from current (???) topic
   void unSubscribeFromCurrentTopic() {
     _client!.unsubscribe(_topic);
   }
