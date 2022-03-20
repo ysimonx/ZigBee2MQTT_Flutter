@@ -36,12 +36,19 @@ class IOTDevice {
 class ZigBeeDevice extends IOTDevice {
   String? _network;
   String? _adresseIEEE;
+  List<dynamic>? _exposes;
 
-  ZigBeeDevice({String? adresseIEEE, String? name, String? description})
+  ZigBeeDevice(
+      {String? adresseIEEE,
+      String? name,
+      String? description,
+      List<dynamic>? exposes})
       : super(name: name, description: description) {
     _adresseIEEE = adresseIEEE;
     _network = "Zigbee";
+    _exposes = exposes;
   }
 
   String? get adresseIEEE => _adresseIEEE;
+  List? get exposes => _exposes;
 }

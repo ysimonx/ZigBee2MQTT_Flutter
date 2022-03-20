@@ -43,13 +43,17 @@ class Zigbee2MQTTManager extends MQTTManager {
 
     for (var i = 0; i < x.length; i++) {
       var device = x[i];
+      var definition = device["definition"];
+      var description = (definition == null) ? "" : definition['description'];
+      List<dynamic> exposes = (definition == null) ? [] : definition['exposes'];
 
       _hmapDevices.putIfAbsent(
           device["ieee_address"],
           () => ZigBeeDevice(
               adresseIEEE: device["ieee_address"],
               name: device["friendly_name"],
-              description: device["description"]));
+              description: description,
+              exposes: exposes));
     }
 
     _hmapDevices.forEach((k, v) {

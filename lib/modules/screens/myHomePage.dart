@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         title: Text('$device_key'),
                         leading: const Icon(Icons.lightbulb),
                         trailing: const Text('trailing'),
-                        subtitle: Text('${device.name}'),
+                        subtitle: Text('${device.name}\n${device.description}'),
                         isThreeLine: true));
               },
             )
