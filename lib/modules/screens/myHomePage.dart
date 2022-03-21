@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         trailing: const Text('trailing'),
                         subtitle: Text('${device.name}\n' +
                             '${device.description}\n' +
-                            '${device.getDeviceTypes().join(", ")}\n'),
+                            '${device.exposes.keys.join(", ")}\n'),
                         isThreeLine: true));
               },
             )

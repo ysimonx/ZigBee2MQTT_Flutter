@@ -22,7 +22,7 @@ class IOTDevice {
 class ZigBeeDevice extends IOTDevice {
   String? _network;
   String? _adresseIEEE;
-  List<dynamic> _listExposes = List<dynamic>.empty();
+  HashMap<String, dynamic> _exposes = HashMap<String, dynamic>();
 
   ZigBeeDevice(
       {String? adresseIEEE,
@@ -32,39 +32,51 @@ class ZigBeeDevice extends IOTDevice {
       : super(name: name, description: description) {
     _adresseIEEE = adresseIEEE;
     _network = "Zigbee";
-    _listExposes = exposes!;
+    _exposes = getDeviceType(exposes);
   }
 
   String? get adresseIEEE => _adresseIEEE;
   // List? get exposes => _exposes;
-  List<dynamic> exposes() => _listExposes;
 
-  List<String> getDeviceTypes() {
-    var result = getDeviceType(_listExposes);
-    return result;
-  }
+  HashMap<String, dynamic> get exposes => _exposes;
 
-  List<String> getDeviceType(var param) {
-    Map<String, dynamic> expose = Map<String, dynamic>();
-
-    var arr = List<String>.empty(growable: true);
-
-    if (param is Map) {
-      expose = Map<String, dynamic>.from(param);
-      if (expose.containsKey("features")) {
-        var arr_child = getDeviceType(expose["features"]);
-        arr.addAll(arr_child);
-      }
-
-      if (expose.containsKey("name")) {
-        arr.add(expose["name"]);
-      }
-    }
+  HashMap<String, dynamic> getDeviceType(var param) {
+    var arr = HashMap<String, dynamic>();
 
     if (param is List) {
       for (int i = 0; i < param.length; i++) {
-        var arr_child = getDeviceType(param[i]);
-        arr.addAll(arr_child);
+        var arr_child = getDeviceType(param[i]); // recursif
+
+        var tempHM = HashMap<String, dynamic>();
+        for (int i = 0; i < arr_child.keys.length; i++) {
+          String key = arr_child.keys.elementAt(i);
+          var values = arr_child[key];
+          tempHM[key] = values;
+        }
+        arr.addAll(tempHM);
+      }
+    }
+
+    if (param is Map) {
+      Map<String, dynamic> expose = Map<String, dynamic>.from(param);
+
+      if (expose.containsKey("features")) {
+        var arr_child = getDeviceType(expose["features"]); // recursif
+
+        var tempHM = HashMap<String, dynamic>();
+        for (int i = 0; i < arr_child.keys.length; i++) {
+          String key = arr_child.keys.elementAt(i);
+          var values = arr_child[key];
+          tempHM[key] = values;
+        }
+        arr.addAll(tempHM);
+      }
+
+      if (expose.containsKey("name")) {
+        // c'est la clé de l'expose
+        var tempHM = HashMap<String, dynamic>();
+        tempHM[expose["name"]] = expose;
+        arr.addAll(tempHM);
       }
     }
 
