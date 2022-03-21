@@ -1,25 +1,11 @@
-class Expose {
-  String? _key;
-  String? _value;
-  String? _type;
+import 'dart:collection';
 
-  Expose() {
-    _key = "";
-    _value = "";
-    _type = "";
-  }
-
-  String? get key => _key;
-  String? get value => _value;
-  String? get type => _type;
-}
+import 'dart:ffi';
 
 class IOTDevice {
   String? _name;
   String? _description;
   String? _network;
-
-  List<Expose> listExposes = List<Expose>.empty();
 
   IOTDevice({String? name, String? description}) {
     _name = name;
@@ -36,7 +22,7 @@ class IOTDevice {
 class ZigBeeDevice extends IOTDevice {
   String? _network;
   String? _adresseIEEE;
-  List<dynamic>? _exposes;
+  List<dynamic> _listExposes = List<dynamic>.empty();
 
   ZigBeeDevice(
       {String? adresseIEEE,
@@ -46,9 +32,42 @@ class ZigBeeDevice extends IOTDevice {
       : super(name: name, description: description) {
     _adresseIEEE = adresseIEEE;
     _network = "Zigbee";
-    _exposes = exposes;
+    _listExposes = exposes!;
   }
 
   String? get adresseIEEE => _adresseIEEE;
-  List? get exposes => _exposes;
+  // List? get exposes => _exposes;
+  List<dynamic> exposes() => _listExposes;
+
+  List<String> getDeviceTypes() {
+    var result = getDeviceType(_listExposes);
+    return result;
+  }
+
+  List<String> getDeviceType(var param) {
+    Map<String, dynamic> expose = Map<String, dynamic>();
+
+    var arr = List<String>.empty(growable: true);
+
+    if (param is Map) {
+      expose = Map<String, dynamic>.from(param);
+      if (expose.containsKey("features")) {
+        var arr_child = getDeviceType(expose["features"]);
+        arr.addAll(arr_child);
+      }
+
+      if (expose.containsKey("name")) {
+        arr.add(expose["name"]);
+      }
+    }
+
+    if (param is List) {
+      for (int i = 0; i < param.length; i++) {
+        var arr_child = getDeviceType(param[i]);
+        arr.addAll(arr_child);
+      }
+    }
+
+    return arr;
+  }
 }

@@ -97,10 +97,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     elevation: 6,
                     margin: const EdgeInsets.all(10),
                     child: ListTile(
-                        title: Text('$device_key'),
+                        title: Text(device_key),
                         leading: const Icon(Icons.lightbulb),
                         trailing: const Text('trailing'),
-                        subtitle: Text('${device.name}\n${device.description}'),
+                        subtitle: Text('${device.name}\n' +
+                            '${device.description}\n' +
+                            '${device.getDeviceTypes().join(", ")}\n'),
                         isThreeLine: true));
               },
             )
