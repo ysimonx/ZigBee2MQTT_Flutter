@@ -43,13 +43,17 @@ class Zigbee2MQTTManager extends MQTTManager {
 
     for (var i = 0; i < x.length; i++) {
       var device = x[i];
+      var definition = device["definition"];
+      var description = (definition == null) ? "" : definition['description'];
+      List<dynamic> exposes = (definition == null) ? [] : definition['exposes'];
 
       _hmapDevices.putIfAbsent(
           device["ieee_address"],
           () => ZigBeeDevice(
               adresseIEEE: device["ieee_address"],
               name: device["friendly_name"],
-              description: device["description"]));
+              description: description,
+              exposes: exposes));
     }
 
     _hmapDevices.forEach((k, v) {
@@ -62,9 +66,13 @@ class Zigbee2MQTTManager extends MQTTManager {
   @override
   void onDisconnected() {
     super.onDisconnected();
+    _hmapDevices = HashMap<String, ZigBeeDevice>();
+    notifyListeners();
+    /*
     if (_autoReconnect) {
       start(host: host!, port: port!); // reconnect
     }
+    */
   }
 
   void start({required String host, required int port}) {
@@ -80,5 +88,10 @@ class Zigbee2MQTTManager extends MQTTManager {
     }
     initializeMQTTClient(host: host, port: port, identifier: osPrefix);
     connect();
+  }
+
+  void toggleState(ZigBeeDevice device) {
+    publish("zigbee2mqtt/${device.adresseIEEE}/set",
+        '{"state":"TOGGLE","remember_state":true}');
   }
 }

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/managers/MQTTManager.dart';
 import '../core/models/MQTTAppState.dart';
@@ -18,11 +18,31 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  String _host = "";
+  int _port = 0;
+
   final TextEditingController _hostTextController = TextEditingController();
+  final TextEditingController _portTextController = TextEditingController();
+
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    loadPreferences().whenComplete(() {
+      setState(() {
+        _hostTextController.text = _host;
+        String s = _port.toString();
+
+        _portTextController.text = s;
+      });
+    });
+  }
 
   @override
   void dispose() {
     _hostTextController.dispose();
+    _portTextController.dispose();
     super.dispose();
   }
 
@@ -55,6 +75,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: <Widget>[
           _buildTextFieldWith(_hostTextController, 'Enter broker address'),
           const SizedBox(height: 10),
+          _buildTextFieldWith(_portTextController, 'Enter broker port'),
+          const SizedBox(height: 10),
+          RaisedButton(
+              textColor: Colors.white,
+              color: Colors.blue,
+              onPressed: () {
+                String host = _hostTextController.text;
+                String port = _portTextController.text;
+                if (host != '' && port != '') {
+                  print('Successfull');
+                  prefs.setString('host', host);
+                  prefs.setInt('port', int.parse(port));
+                  Navigator.pop(context, 'restart');
+                }
+              },
+              child: const Text("update")),
         ],
       ),
     );
@@ -62,8 +98,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildTextFieldWith(
       TextEditingController controller, String hintText) {
-    bool shouldEnable = false;
-
     return TextField(
         enabled: true,
         controller: controller,
@@ -72,5 +106,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const EdgeInsets.only(left: 0, bottom: 0, top: 0, right: 0),
           labelText: hintText,
         ));
+  }
+
+  Future<void> loadPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _host = (prefs.getString('host') ?? 'host');
+      _port = (prefs.getInt('port') ?? 0);
+    });
   }
 }
