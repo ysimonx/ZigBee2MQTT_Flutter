@@ -3,7 +3,8 @@ enum MQTTAppConnectionState {
   disconnected,
   connecting,
   connectedSubscribed,
-  connectedUnSubscribed
+  connectedUnSubscribed,
+  connectionError
 }
 
 class MQTTAppState {
