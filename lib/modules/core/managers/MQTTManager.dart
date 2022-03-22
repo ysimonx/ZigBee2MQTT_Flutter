@@ -22,7 +22,7 @@ class MQTTManager extends ChangeNotifier {
     _host = host;
     _port = port;
     _client = MqttServerClient(_host!, _identifier);
-    _client!.port = 1883;
+    _client!.port = port;
     _client!.keepAlivePeriod = 20;
     _client!.onDisconnected = onDisconnected;
     _client!.secure = false;
@@ -68,10 +68,16 @@ class MQTTManager extends ChangeNotifier {
     _client!.disconnect();
   }
 
-  void publish(String message) {
+  /* void publish(String message) {
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(message);
     _client!.publishMessage(_topic, MqttQos.exactlyOnce, builder.payload!);
+  } */
+
+  void publish(String topic, String message) {
+    final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
+    builder.addString(message);
+    _client!.publishMessage(topic, MqttQos.exactlyOnce, builder.payload!);
   }
 
   /// The subscribed callback

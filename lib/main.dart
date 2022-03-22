@@ -7,7 +7,7 @@ import 'modules/helpers/service_locator.dart';
 import 'modules/screens/myHomePage.dart';
 import 'modules/screens/settings_screen.dart';
 
-const mqttHost = "192.168.85.3";
+const mqttHost = "172.16.66.100";
 const mqttPort = 1883;
 
 void main() {

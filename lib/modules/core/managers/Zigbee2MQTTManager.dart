@@ -66,9 +66,13 @@ class Zigbee2MQTTManager extends MQTTManager {
   @override
   void onDisconnected() {
     super.onDisconnected();
+    _hmapDevices = HashMap<String, ZigBeeDevice>();
+    notifyListeners();
+    /*
     if (_autoReconnect) {
       start(host: host!, port: port!); // reconnect
     }
+    */
   }
 
   void start({required String host, required int port}) {
@@ -84,5 +88,10 @@ class Zigbee2MQTTManager extends MQTTManager {
     }
     initializeMQTTClient(host: host, port: port, identifier: osPrefix);
     connect();
+  }
+
+  void toggleState(ZigBeeDevice device) {
+    publish("zigbee2mqtt/${device.adresseIEEE}/set",
+        '{"state":"TOGGLE","remember_state":true}');
   }
 }

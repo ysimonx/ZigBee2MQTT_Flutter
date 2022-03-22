@@ -82,4 +82,6 @@ class ZigBeeDevice extends IOTDevice {
 
     return arr;
   }
+
+  void toggle() {}
 }
