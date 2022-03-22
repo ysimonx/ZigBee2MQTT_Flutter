@@ -43,12 +43,10 @@ class _MyHomePageState extends State<MyHomePage> {
     print("---- build ----");
     _manager = Provider.of<Zigbee2MQTTManager>(context);
 
-    if (boolIsFirstBuildDone) {
-      var x = _manager.currentState.getAppConnectionState;
-
-      if (x == MQTTAppConnectionState.disconnected) {
-        _configureAndConnect();
-      }
+    var x = _manager.currentState.getAppConnectionState;
+    // automatic - reconnect
+    if (x == MQTTAppConnectionState.disconnected) {
+      _configureAndConnect();
     }
 
     return Scaffold(
