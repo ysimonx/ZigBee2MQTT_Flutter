@@ -12,6 +12,8 @@ class MQTTManager extends ChangeNotifier {
   int? _port;
   String _topic = "";
 
+  String _error = "";
+
   void initializeMQTTClient({
     required String host,
     required int port,
@@ -48,6 +50,8 @@ class MQTTManager extends ChangeNotifier {
   String? get host => _host;
   int? get port => _port;
 
+  String? get error => _error;
+
   MQTTAppState get currentState => _currentState;
   // Connect to the host
   void connect() async {
@@ -57,9 +61,13 @@ class MQTTManager extends ChangeNotifier {
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
       updateState();
       await _client!.connect();
+      _error = "";
     } on Exception catch (e) {
       print('EXAMPLE::client exception - $e');
-      disconnect();
+
+      _currentState
+          .setAppConnectionState(MQTTAppConnectionState.connectionError);
+      // disconnect();
     }
   }
 

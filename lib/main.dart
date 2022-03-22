@@ -7,9 +7,6 @@ import 'modules/helpers/service_locator.dart';
 import 'modules/screens/myHomePage.dart';
 import 'modules/screens/settings_screen.dart';
 
-const mqttHost = "172.16.66.100";
-const mqttPort = 1883;
-
 void main() {
   setupLocator();
   runApp(const MyApp());
@@ -32,10 +29,8 @@ class MyApp extends StatelessWidget {
             ),
             initialRoute: HOMEPAGE_ROUTE,
             routes: {
-              HOMEPAGE_ROUTE: (BuildContext context) => const MyHomePage(
-                  mqttHost: mqttHost,
-                  mqttPort: mqttPort,
-                  title: 'ZigBee2MQTT Demo 1st Page'),
+              HOMEPAGE_ROUTE: (BuildContext context) =>
+                  const MyHomePage(title: 'ZigBee2MQTT Demo 1st Page'),
               SETTINGS_ROUTE: (BuildContext context) => const SettingsScreen()
             }));
   }

@@ -12,5 +12,7 @@ String prepareStateMessageFrom(MQTTAppConnectionState state) {
       return 'Subscribed';
     case MQTTAppConnectionState.connectedUnSubscribed:
       return 'Unsubscribed';
+    case MQTTAppConnectionState.connectionError:
+      return 'Connection Error';
   }
 }
