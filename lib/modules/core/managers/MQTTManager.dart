@@ -64,9 +64,7 @@ class MQTTManager extends ChangeNotifier {
       _error = "";
     } on Exception catch (e) {
       print('EXAMPLE::client exception - $e');
-
-      _currentState
-          .setAppConnectionState(MQTTAppConnectionState.connectionError);
+      onConnectionError(e);
       // disconnect();
     }
   }
@@ -150,6 +148,11 @@ class MQTTManager extends ChangeNotifier {
         'EXAMPLE::Change notification:: topic is <${topic}>, payload is <-- ${payload} -->');
     print('');
     // updateState();
+  }
+
+  void onConnectionError(Exception e) {
+    _currentState.setAppConnectionState(MQTTAppConnectionState.connectionError);
+    updateState();
   }
 
   // subscribe to a topic
