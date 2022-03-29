@@ -85,24 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemCount: _manager.hmapDevices().length,
                 itemBuilder: (BuildContext context, int index) {
                   HashMap x = _manager.hmapDevices();
-                  String deviceKey = x.keys.elementAt(index);
                   ZigBeeDevice device = x.values.elementAt(index);
 
                   return Card(
                       elevation: 6,
                       margin: const EdgeInsets.all(10),
-                      child: ListTile(
-                          title: Text(deviceKey),
-                          onTap: () {
-                            print("${device.name}");
-                            _manager.toggleState(device);
-                          },
-                          leading: const Icon(Icons.lightbulb),
-                          trailing: const Text('trailing'),
-                          subtitle: Text('${device.name}\n' +
-                              '${device.description}\n' +
-                              '${device.exposes.keys.join(", ")}\n'),
-                          isThreeLine: true));
+                      child: _buildCard(context, device));
                 },
               ))
           : const Center(child: Text('No items')),
@@ -113,6 +101,27 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Widget _buildCard(BuildContext context, ZigBeeDevice device) {
+    /* return Text('${device.name}\n' +
+        '${device.description}\n' +
+        '${device.exposes.keys.join(", ")}\n');
+    */
+    String deviceKey = device.adresseIEEE;
+
+    return ListTile(
+        title: Text(deviceKey),
+        onTap: () {
+          print("${device.name}");
+          _manager.toggleState(device);
+        },
+        leading: const Icon(Icons.lightbulb),
+        trailing: const Text('trailing'),
+        subtitle: Text('${device.name}\n' +
+            '${device.description}\n' +
+            '${device.exposes.keys.join(", ")}\n'),
+        isThreeLine: true);
   }
 
   void _onTapSettings(BuildContext context) async {

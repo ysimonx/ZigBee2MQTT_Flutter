@@ -1,7 +1,5 @@
 import 'dart:collection';
 
-import 'dart:ffi';
-
 class IOTDevice {
   String? _name;
   String? _description;
@@ -21,11 +19,11 @@ class IOTDevice {
 
 class ZigBeeDevice extends IOTDevice {
   String? _network;
-  String? _adresseIEEE;
+  String _adresseIEEE = "";
   HashMap<String, dynamic> _exposes = HashMap<String, dynamic>();
 
   ZigBeeDevice(
-      {String? adresseIEEE,
+      {required String adresseIEEE,
       String? name,
       String? description,
       List<dynamic>? exposes})
@@ -35,8 +33,7 @@ class ZigBeeDevice extends IOTDevice {
     _exposes = getDeviceType(exposes);
   }
 
-  String? get adresseIEEE => _adresseIEEE;
-  // List? get exposes => _exposes;
+  String get adresseIEEE => _adresseIEEE;
 
   HashMap<String, dynamic> get exposes => _exposes;
 
@@ -45,12 +42,12 @@ class ZigBeeDevice extends IOTDevice {
 
     if (param is List) {
       for (int i = 0; i < param.length; i++) {
-        var arr_child = getDeviceType(param[i]); // recursif
+        var arrChild = getDeviceType(param[i]); // recursif
 
         var tempHM = HashMap<String, dynamic>();
-        for (int i = 0; i < arr_child.keys.length; i++) {
-          String key = arr_child.keys.elementAt(i);
-          var values = arr_child[key];
+        for (int i = 0; i < arrChild.keys.length; i++) {
+          String key = arrChild.keys.elementAt(i);
+          var values = arrChild[key];
           tempHM[key] = values;
         }
         arr.addAll(tempHM);
@@ -61,12 +58,12 @@ class ZigBeeDevice extends IOTDevice {
       Map<String, dynamic> expose = Map<String, dynamic>.from(param);
 
       if (expose.containsKey("features")) {
-        var arr_child = getDeviceType(expose["features"]); // recursif
+        var arrChild = getDeviceType(expose["features"]); // recursif
 
         var tempHM = HashMap<String, dynamic>();
-        for (int i = 0; i < arr_child.keys.length; i++) {
-          String key = arr_child.keys.elementAt(i);
-          var values = arr_child[key];
+        for (int i = 0; i < arrChild.keys.length; i++) {
+          String key = arrChild.keys.elementAt(i);
+          var values = arrChild[key];
           tempHM[key] = values;
         }
         arr.addAll(tempHM);
