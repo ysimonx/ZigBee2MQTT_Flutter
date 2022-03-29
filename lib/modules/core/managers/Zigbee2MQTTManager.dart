@@ -68,11 +68,12 @@ class Zigbee2MQTTManager extends MQTTManager {
     super.onDisconnected();
     _hmapDevices = HashMap<String, ZigBeeDevice>();
     notifyListeners();
-    /*
-    if (_autoReconnect) {
-      start(host: host!, port: port!); // reconnect
-    }
-    */
+  }
+
+  @override
+  void onConnectionError(Exception e) {
+    super.onConnectionError(e);
+    notifyListeners();
   }
 
   void start({required String host, required int port}) {
