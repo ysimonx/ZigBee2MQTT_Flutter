@@ -114,6 +114,10 @@ class MQTTManager extends ChangeNotifier {
 
     print('EXAMPLE::Mosquitto client connected....');
 
+    var u = _client!.updates;
+    if (u == null) {
+      print('client.updates are null');
+    }
     _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       for (var i = 0; i < c.length; i++) {
         onReceivedMessage(c[i]);
