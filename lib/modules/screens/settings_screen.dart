@@ -1,14 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../core/managers/MQTTManager.dart';
-import '../core/models/MQTTAppState.dart';
-import '../helpers/status_info_message_utils.dart';
-import '../widgets/status_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);

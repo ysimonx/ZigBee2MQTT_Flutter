@@ -10,8 +10,6 @@ import 'MQTTManager.dart';
 class Zigbee2MQTTManager extends MQTTManager {
   HashMap _hmapDevices = HashMap<String, ZigBeeDevice>();
 
-  final bool _autoReconnect = true;
-
   HashMap hmapDevices() => _hmapDevices;
 
   @override
@@ -84,9 +82,12 @@ class Zigbee2MQTTManager extends MQTTManager {
     }
 
     String osPrefix = 'Flutter_iOS';
+    /*
     if (Platform.isAndroid) {
       osPrefix = 'Flutter_Android';
     }
+    
+    */
     initializeMQTTClient(host: host, port: port, identifier: osPrefix);
     connect();
   }

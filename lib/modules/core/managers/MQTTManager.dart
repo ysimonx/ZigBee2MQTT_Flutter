@@ -10,7 +10,6 @@ class MQTTManager extends ChangeNotifier {
   late String _identifier;
   String? _host;
   int? _port;
-  String _topic = "";
 
   String _error = "";
 
@@ -74,12 +73,6 @@ class MQTTManager extends ChangeNotifier {
     _client!.disconnect();
   }
 
-  /* void publish(String message) {
-    final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
-    builder.addString(message);
-    _client!.publishMessage(_topic, MqttQos.exactlyOnce, builder.payload!);
-  } */
-
   void publish(String topic, String message) {
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(message);
@@ -121,6 +114,10 @@ class MQTTManager extends ChangeNotifier {
 
     print('EXAMPLE::Mosquitto client connected....');
 
+    var u = _client!.updates;
+    if (u == null) {
+      print('client.updates are null');
+    }
     _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       for (var i = 0; i < c.length; i++) {
         onReceivedMessage(c[i]);
@@ -157,19 +154,12 @@ class MQTTManager extends ChangeNotifier {
 
   // subscribe to a topic
   void subScribeTo(String topic) {
-    // Save topic for future use
-    _topic = topic;
     _client!.subscribe(topic, MqttQos.atLeastOnce);
   }
 
   /// Unsubscribe from a topic
   void unSubscribe(String topic) {
     _client!.unsubscribe(topic);
-  }
-
-  /// Unsubscribe from current (???) topic
-  void unSubscribeFromCurrentTopic() {
-    _client!.unsubscribe(_topic);
   }
 
   void updateState() {
