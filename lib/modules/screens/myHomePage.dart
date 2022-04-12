@@ -8,6 +8,7 @@ import 'package:zigbee2mqtt_flutter/modules/core/models/IOTDevice.dart';
 import '../../modules/core/models/MQTTAppState.dart';
 import '../core/managers/Zigbee2MQTTManager.dart';
 import '../helpers/screen_route.dart';
+import '../widgets/device.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
@@ -76,7 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Card(
                       elevation: 6,
                       margin: const EdgeInsets.all(10),
-                      child: _buildCard(context, device));
+                      // child: _buildCard(context, device));
+                      child: Device(zigBeeDevice: device));
                 },
               ))
           : const Center(child: Text('No items')),
@@ -94,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
         '${device.description}\n' +
         '${device.exposes.keys.join(", ")}\n');
     */
+
     String deviceKey = device.adresseIEEE;
 
     return ListTile(

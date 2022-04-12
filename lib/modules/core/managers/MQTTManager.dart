@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -114,17 +116,26 @@ class MQTTManager extends ChangeNotifier {
 
     print('EXAMPLE::Mosquitto client connected....');
 
+    onReadyForReceivedMessage();
+
+    print(
+        'EXAMPLE::OnConnected client callback - Client connection was sucessful');
+  }
+
+  // add listeners for received message when client is ready (_client.updates !=null )
+  void onReadyForReceivedMessage() {
     var u = _client!.updates;
     if (u == null) {
-      print('client.updates are null');
+      print(
+          'client.updates are null, not ready to receive messages yet from broker...');
+      return;
     }
+
     _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       for (var i = 0; i < c.length; i++) {
         onReceivedMessage(c[i]);
       }
     });
-    print(
-        'EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }
 
   /// process incoming message -> topic + payload
