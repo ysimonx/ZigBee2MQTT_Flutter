@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:zigbee2mqtt_flutter/modules/core/models/IOTDevice.dart';
 
