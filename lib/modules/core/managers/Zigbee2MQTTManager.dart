@@ -23,6 +23,8 @@ class Zigbee2MQTTManager extends MQTTManager {
   void onReceivedTopicMessage(String topic, String payload) {
     super.onReceivedTopicMessage(topic, payload);
     if (topic == "zigbee2mqtt/bridge/devices") {
+      print(
+          " = = = = = = = = = = = = = = = = zigbee2mqtt/bridge/devices = = = = = = = = = = = = = = = = =");
       refreshListDevices(payload);
     }
   }
@@ -95,5 +97,13 @@ class Zigbee2MQTTManager extends MQTTManager {
   void toggleState(ZigBeeDevice device) {
     publish("zigbee2mqtt/${device.adresseIEEE}/set",
         '{"state":"TOGGLE","remember_state":true}');
+  }
+
+  void setExpose(ZigBeeDevice device, String key, dynamic value) {
+    String s = '{"state":"$value","remember_state":true}';
+    print(s);
+    // publish("zigbee2mqtt/${device.adresseIEEE}/set",
+    //    '{"state":"TOGGLE","remember_state":true}');
+    publish("zigbee2mqtt/${device.adresseIEEE}/set", s);
   }
 }
